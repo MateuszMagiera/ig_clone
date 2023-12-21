@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <div class="home-container">
+        <h1>Welcome to my Project</h1>
+        <p>This is a simple yet effective Instagram clone. Here you can share images, like and comment on posts, and connect with friends.</p>
+        <a href="{{ url_for('Users.UserLogin') }}" class="btn login-btn">Login to Your Account</a>
+        <a href="{{ url_for('Users.UserRegister') }}" class="btn login-btn">Register a new user</a>
+    </div>
+</body>
+</html>

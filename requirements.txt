@@ -1,0 +1,8 @@
+flask-smorest
+Flask-SQLAlchemy
+Flask
+Jinja2
+marshmallow
+pip
+python-dotenv
+SQLAlchemy
