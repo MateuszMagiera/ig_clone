@@ -1,5 +1,5 @@
 import uuid
-from flask import request, render_template, redirect, flash, url_for
+from flask import request, render_template, redirect, flash, url_for, session
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from marshmallow import ValidationError
@@ -121,6 +121,10 @@ class UserLogin(MethodView):
         user = UserModel.query.filter(UserModel.username == username).first()
         if user and pbkdf2_sha256.verify(password, user.password):
             access_token = create_access_token(identity=user.id)
+
+            # Store the access token in the session
+            session['acces_token'] = access_token
+            session['user_id'] = user.id
 
             if request.content_type == 'application/x-www-form-urlencoded':
                 return redirect(url_for('Posts.PostsList'))  # Redirect to /posts page for frontend

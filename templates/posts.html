@@ -4,19 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts</title>
-     <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
 </head>
 <body>
 {% include "navbar.html" %}
-    <div class="posts-container">
-        <h1>Posts</h1>
-        {% for post in posts %}
-            <div class="post">
-                <h3>Title: {{ post.title }}</h3>
-                <p>Content: {{ post.content }}</p>
-                <p>Created At: {{ post.created_at }}</p>
-            </div>
-        {% endfor %}
-    </div>
+<div class="posts-container">
+    <h1>Posts</h1>
+
+    <!-- Create Post button -->
+    <button id="createPostButton">Create Post</button>
+
+    <!-- Form for creating posts (initially hidden) -->
+    <form method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8000/posts" id="createPostForm" style="display: none;">
+        <input type="text" name="title" placeholder="Title">
+        <textarea name="content" placeholder="Content"></textarea>
+        <input type="file" name="image">
+        <input type="hidden" name="access_token" value="{{ session['access_token'] }}">
+        <input type="submit" value="Upload Post">
+    </form>
+
+    {% for post in posts %}
+        <div class="post">
+            <h3>Title: {{ post.title }}</h3>
+            <p>Content: {{ post.content }}</p>
+            <p>Created At: {{ post.created_at }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- JavaScript to toggle form visibility -->
+<script>
+    const createPostForm = document.getElementById("createPostForm");
+
+createPostForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const formData = new FormData(createPostForm);
+
+    // Retrieve the access token from the session
+    const accessToken = "{{ session.get('access_token') }}";
+
+    // Append the access token to the request headers
+    const headers = new Headers({
+        Authorization: `Bearer ${accessToken}`,
+    });
+
+    // Prepare the POST request
+    const postRequest = new Request("http://127.0.0.1:8000/posts", {
+        method: "POST",
+        body: formData,
+        headers: headers, // Include the headers with the access token
+    });
+
+    // Send the POST request
+    const postResponse = await fetch(postRequest);
+
+    // Handle the response as needed
+    console.log("Response:", postResponse);
+
+    // Optionally, refresh the page to display the new post
+    if (postResponse.ok) {
+        location.reload();
+    }
+});
+
+</script>
+
 </body>
 </html>
